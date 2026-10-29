@@ -3,6 +3,7 @@ import EventEmitter from 'node:events';
 import {createReadStream} from 'node:fs';
 
 const CHUNK_SIZE = 16384;
+const MAX_ROW_COUNT = 1000;
 
 export class TsvFileReader extends EventEmitter implements FileReader {
 
@@ -26,6 +27,13 @@ export class TsvFileReader extends EventEmitter implements FileReader {
         importedRowCount++;
 
         this.emit('line', completeRow);
+
+        if(importedRowCount >= MAX_ROW_COUNT) {
+          stream.destroy();
+          this.emit('end', importedRowCount);
+          console.info(`Maximum number of read rows (${MAX_ROW_COUNT}) has been reached.`);
+          return;
+        }
       }
     }
 

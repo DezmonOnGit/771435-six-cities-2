@@ -15,3 +15,8 @@ export function getRandomItem<T>(items: T[]):T {
 export function getErrorMessage(error: unknown): string {
   return error instanceof Error ? error.message : '';
 }
+
+export function logError(e: unknown, msg: string) {
+  console.error(msg);
+  console.error(getErrorMessage(e));
+}
